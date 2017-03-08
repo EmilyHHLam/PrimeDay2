@@ -15,21 +15,33 @@ var newEl, newText, position;
 //Capture the position of insertion into the DOM
 position = document.getElementById('content');
 
+
 //Loop the array, extracting each array and writing information to the DOM
 //Note that the information is not 'clean'
+//console.log('before loop array' + array);
+var calcArray = [];
+function newCalFunc() {
 for(var i = 0; i < array.length; i++){
-	array[i] = calculateSTI(array);
- 	newEl = document.createElement('li');
-	newText = document.createTextNode(array[i]);
-	newEl.appendChild(newText);
-	position.appendChild(newEl);
+	//scott's code FAULT
+	//array[i] = calculateSTI(array);
+	calcArray.push(calculateSTI(array[i]));
+}
+return calcArray;
+}
+var newSetArray = newCalFunc();
+
+//Loop to get the new array shown on the html page
+for (var j = 0; j< newSetArray.length; j++) {
+ newEl = document.createElement('li');
+ newText = document.createTextNode(newSetArray[j]);
+ newEl.appendChild(newText);
+position.appendChild(newEl);
 }
 
 function calculateSTI(array){
   var newArray = [];
 
   newArray[0] = array[0]; // employee name
-
   var employeeNumber = array[1];
   var baseSalary = array[2];
   var reviewScore = array[3];
@@ -38,11 +50,13 @@ function calculateSTI(array){
   if(bonus > 0.13){
     bonus = 0.13;
   }
-
+//Round up decimal data'
+	//FAULT - not round the bonus;
+	//Scott's code: newArray[1] = Math.round(bonus);
   newArray[1] = bonus; // percentage of STI employee to receive
-  newArray[2] = baseSalary * (1.0 + bonus); // adjusted annual compensation
-  newArray[3] = baseSalary * bonus; //total bonus rounded to nearest dollar
-  console.log(newArray[0] + " " + newArray[1] + " " + newArray[2] + " " + newArray[3]);
+  newArray[2] = Math.round(baseSalary * (1.0 + bonus)); // adjusted annual compensation
+  newArray[3] = Math.round(baseSalary * bonus); //total bonus rounded to nearest dollar
+  console.log(newArray[0] + " " + Math.round(newArray[1]) + " " + Math.round(newArray[2]) + " " + Math.round(newArray[3]));
   return newArray;
 }
 
@@ -65,7 +79,9 @@ function getBaseSTI(reviewScore){
       basePercent = 0.10;
       break;
   }
-  return basePercent - 1;
+	//takeout basePercent -1
+	//console.log('base%' + basePercent);
+  return basePercent;
 }
 
 function getYearAdjustment(employeeNumber){
